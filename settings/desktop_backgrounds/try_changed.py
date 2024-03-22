@@ -1,18 +1,29 @@
 import tkinter as tk
-from PIL import ImageTk, Image
-
-root = tk.Tk()
-# 背景
-canvas = tk.Canvas(root, width=1200, height=699, bd=0, highlightthickness=0)
-imgpath = 'changed.gif'
-img = Image.open(imgpath)
-img = img.resize((1200, 699))
-photo = ImageTk.PhotoImage(img)
 
 
-canvas.create_image(600, 349, image=photo)
-canvas.pack()
+class MyWindow:
+    def __init__(self, master):
+        self.img = None
+        self.master = master
+        self.canvas = tk.Canvas(self.master, width=200, height=200, bg='white')
+        self.set()
 
-# canvas.create_window(100, 50, width=100, height=20)
+    def set(self):
+        self.master.geometry('1200x699')
+        self.create_canvas()
 
-root.mainloop()
+    def create_canvas(self):
+        self.canvas.place(x=50, y=50)  # 使用place方法将Canvas放置到窗口上
+        self.img = tk.PhotoImage(file="changed.gif")
+        self.canvas.create_image(100, 100, image=self.img)  # 使用create_image方法在Canvas上添加图片
+        self.canvas.create_line(0, 0, 200, 200, fill='blue')
+        self.canvas.create_rectangle(50, 50, 150, 150, fill='red')
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.title("Main Window")
+
+    my_window = MyWindow(root)
+
+    root.mainloop()
