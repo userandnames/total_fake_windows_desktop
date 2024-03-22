@@ -62,7 +62,7 @@ class Fake_Win:
         self.canvas_root.create_image(int(self.size[0])/2, int(self.size[1])/2, image=self.background_photo)
         self.canvas_root.bind("<Button-3>", self.simulate_right_click)
         self.canvas_root.bind("<Button-1>", self.simulate_left_click)
-        self.canvas_root.bind("<ButtonPress-1>", self.simulate_left_pressed)
+        # self.canvas_root.bind("<ButtonPress-1>", self.simulate_left_pressed)
 
     def simulate_right_click(self, event):
         x = event.widget.winfo_pointerx()
@@ -77,17 +77,23 @@ class Fake_Win:
         if self.right_click_bar is not None:
             self.right_click_bar.destroy()
 
-    def simulate_left_pressed(self, event):
-        x = event.widget.winfo_pointerx()
-        y = event.widget.winfo_pointery()
-        if len(self.pressed_position) == 0:
-            self.pressed_position.append([x, y])
-            self.pressed_position.append([x, y])
-        elif len(self.pressed_position) >= 2:
-            self.pressed_position[-1] = [x, y]
-            self.selected_rectangle = self.canvas_root.create_rectangle(self.pressed_position[0][0], self.pressed_position[0][1],
-                                                          self.pressed_position[-1][0], self.pressed_position[-1][1],
-                                                          fill="blue", outline="blue", stipple="gray25")
+    def simulate_left_pressed(self, x, y, button, pressed):
+        print("pressed", pressed)
+        if self.selected_rectangle is not None:
+            self.canvas_root.delete(self.selected_rectangle)
+            # self.pressed_position = []
+
+        if button == mouse.Button.left and pressed:
+            x, y = self.canvas_root.winfo_pointerxy()
+            if len(self.pressed_position) == 0:
+                self.pressed_position.append([x, y])
+                self.pressed_position.append([x, y])
+            if len(self.pressed_position) >= 2:
+                self.pressed_position[-1] = [x, y]
+                self.selected_rectangle = self.canvas_root.create_rectangle(
+                                                              self.pressed_position[0][0], self.pressed_position[0][1],
+                                                              self.pressed_position[-1][0], self.pressed_position[-1][1],
+                                                              fill="blue", outline="blue", stipple="gray25")
 
     def maintain(self):
         self.root.mainloop()
